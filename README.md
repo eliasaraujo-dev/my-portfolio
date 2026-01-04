@@ -1,16 +1,58 @@
-# React + Vite
+# 🚀 Elias Araújo - Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um portfolio pessoal moderno e interativo construído com React, Vite e Tailwind CSS.
 
-Currently, two official plugins are available:
+![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=flat-square&logo=react)
+![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=flat-square&logo=vite)
+![Tailwind](https://img.shields.io/badge/Tailwind-3.4.19-38B2AC?style=flat-square&logo=tailwindcss)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- 🌙 **Tema Dark/Light** - Alternância suave entre temas
+- 🌍 **Multi-idioma** - Suporte para Português e Inglês
+- 🎨 **Efeito Spotlight** - Cards interativos com luz seguindo o mouse
+- 📱 **Responsivo** - Design adaptável para todos os dispositivos
+- ⚡ **Performance** - Construído com Vite para carregamento ultrarrápido
+- 🎭 **Animações** - Transições fluidas com Framer Motion
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Framework:** React 19
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
+- **Animações:** Framer Motion
+- **Ícones:** Lucide React
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Como Executar
+
+```bash
+# Instalar dependências
+npm install
+
+# Executar em modo desenvolvimento
+npm run dev
+
+# Build para produção
+npm run build
+
+# Visualizar build de produção
+npm run preview
+```
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── components/
+│   └── ControlButtons.jsx  # Botões de tema e idioma
+├── assets/                  # Imagens e recursos estáticos
+├── App.jsx                  # Componente principal
+├── App.css                  # Estilos globais
+├── index.css               # Configuração Tailwind
+├── main.jsx                # Ponto de entrada
+└── translations.js         # Traduções PT/EN
+```
+
+## 📄 Licença
+
+Design & Code by Elias Araújo.
