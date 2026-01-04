@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSpring, motion, AnimatePresence } from 'framer-motion';
 import { 
   Github, 
   Linkedin, 
@@ -18,6 +19,93 @@ import {
 } from 'lucide-react';
 import ControlButtons from './components/ControlButtons';
 import { translations } from './translations';
+
+/* --- Deep Space Warp Background --- */
+const DeepSpaceBackground = ({ theme, travelProgress }) => {
+  const canvasRef = useRef(null);
+  const velocitySpring = useSpring(0, { stiffness: 15, damping: 20 });
+
+  useEffect(() => {
+    velocitySpring.set(travelProgress);
+  }, [travelProgress, velocitySpring]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const stars = [];
+    for (let i = 0; i < 1000; i++) {
+      stars.push({
+        x: Math.random() * width - width / 2,
+        y: Math.random() * height - height / 2,
+        z: Math.random() * width,
+        size: Math.random() * 1.2 + 0.2
+      });
+    }
+
+    const draw = () => {
+      ctx.fillStyle = theme === 'light' ? '#f0f4f8' : '#000';
+      ctx.fillRect(0, 0, width, height);
+      
+      const cx = width / 2;
+      const cy = height / 2;
+      const currentVelocity = 0.8 + (velocitySpring.get() * 140);
+
+      stars.forEach(s => {
+        const oldZ = s.z;
+        s.z -= currentVelocity;
+
+        if (s.z <= 1) {
+          s.z = width;
+          s.x = Math.random() * width - width / 2;
+          s.y = Math.random() * height - height / 2;
+          return;
+        }
+
+        const k = 128 / s.z;
+        const x = s.x * k + cx;
+        const y = s.y * k + cy;
+
+        const kOld = 128 / oldZ;
+        const xOld = s.x * kOld + cx;
+        const yOld = s.y * kOld + cy;
+
+        const opacity = Math.min(1, (1 - s.z / width) * 2);
+        
+        ctx.beginPath();
+        ctx.strokeStyle = theme === 'light' 
+          ? `rgba(0,0,0,${opacity * 0.15})` 
+          : `rgba(255, 255, 255, ${opacity})`;
+        
+        ctx.lineWidth = s.size * (1 + (currentVelocity / 15));
+        ctx.lineCap = 'round';
+        
+        ctx.moveTo(xOld, yOld);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      });
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+
+    draw();
+    const handleResize = () => { 
+      width = canvas.width = window.innerWidth; 
+      height = canvas.height = window.innerHeight; 
+    };
+    window.addEventListener('resize', handleResize);
+    return () => { 
+      cancelAnimationFrame(animationFrameId); 
+      window.removeEventListener('resize', handleResize); 
+    };
+  }, [theme, velocitySpring]);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
+};
 
 /* --- Components Utilitários --- */
 
@@ -106,12 +194,52 @@ const ProfileScanner = () => {
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [theme, setTheme] = useState('dark');
-  const [lang, setLang] = useState('pt');
+  const [lang, setLang] = useState('en');
+  
+  // Estados para a animação de viagem espacial
+  const [isTraveling, setIsTraveling] = useState(false);
+  const [travelProgress, setTravelProgress] = useState(0);
+  const [showArrival, setShowArrival] = useState(false);
+  const [showPortfolio, setShowPortfolio] = useState(false);
+  const [flash, setFlash] = useState(false);
+  
+  const currentYear = new Date().getFullYear();
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   const toggleLang = () => setLang(prev => prev === 'en' ? 'pt' : 'en');
 
   const t = translations[lang];
+
+  // Animação de viagem espacial na entrada
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsTraveling(true);
+      let p = 0;
+      const accelInterval = setInterval(() => {
+        p += 0.012;
+        setTravelProgress(p);
+
+        if (p >= 1) {
+          clearInterval(accelInterval);
+          setFlash(true);
+          
+          setTimeout(() => {
+            setShowArrival(true);
+            setTravelProgress(0); 
+            setFlash(false);
+            setIsTraveling(false);
+            
+            // Após 6.0s na tela de chegada, mostrar o portfolio
+            setTimeout(() => {
+              setShowPortfolio(true);
+            }, 6000);
+          }, 800);
+        }
+      }, 40);
+    }, 1500); 
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Aplicar tema ao body
   useEffect(() => {
@@ -173,31 +301,111 @@ const App = () => {
         : 'bg-black text-white'
     }`}>
       
-      {/* Control Buttons */}
-      <ControlButtons 
-        theme={theme} 
-        lang={lang} 
-        onThemeChange={toggleTheme} 
-        onLangChange={toggleLang} 
-      />
+      {/* Deep Space Warp Background */}
+      <DeepSpaceBackground theme={theme} travelProgress={travelProgress} />
       
-      {/* Background Grid & Ambient Light */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className={`absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] ${theme === 'light' ? 'opacity-30' : ''}`}></div>
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2"></div>
-      </div>
+      {/* Clarão da Dobra com AnimatePresence */}
+      <AnimatePresence>
+        {flash && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-white"
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Floating Navbar */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-        <div className="flex items-center gap-1 bg-white/5 backdrop-blur-xl border border-white/10 px-2 py-2 rounded-full shadow-2xl shadow-black/50">
-          {['home', 'work', 'about', 'contact'].map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollTo(item)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeSection === item 
-                  ? theme === 'light'
+      <AnimatePresence mode="wait">
+        {!showArrival ? (
+          /* Tela de Intro - Deep Space */
+          <motion.div 
+            key="intro"
+            exit={{ opacity: 0, scale: 2, filter: 'blur(20px)' }}
+            className="relative z-50 flex flex-col items-center justify-center h-screen space-y-4"
+          >
+            <h1 className="text-white text-4xl font-black uppercase tracking-[0.5em] italic">
+              {isTraveling ? "Warp Drive Active" : "Deep Space"}
+            </h1>
+            {isTraveling && (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0.5, 1] }}
+                className="text-cyan-400 font-mono text-xs tracking-widest uppercase"
+              >
+                Approaching Milky Way...
+              </motion.p>
+            )}
+          </motion.div>
+        ) : !showPortfolio ? (
+          /* Tela de Chegada - Arrival */
+          <motion.div 
+            key="arrival"
+            initial={{ scale: 1.5, filter: 'blur(40px)', opacity: 0 }}
+            animate={{ scale: 1, filter: 'blur(0px)', opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.22, 1, 0.36, 1],
+              opacity: { duration: 0.5 }
+            }}
+            className="relative z-50 p-20 flex flex-col items-center justify-center min-h-screen text-center"
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <h2 className="text-cyan-400 font-mono text-lg md:text-xl tracking-[0.5em] uppercase mb-4">
+                Location: Milky Way Galaxy
+              </h2>
+              <h3 className="text-white/70 font-mono text-base tracking-widest uppercase mb-8">
+                Arrival Date: January {currentYear}
+              </h3>
+              
+              <p className="text-white/60 max-w-md text-lg font-medium italic mx-auto">
+                System stabilized. Digital environment successfully re-materialized.
+              </p>
+            </motion.div>
+          </motion.div>
+        ) : (
+          /* Conteúdo do Portfolio com efeito de "destorção" */
+          <motion.div 
+            key="portfolio"
+            initial={{ scale: 1.5, filter: 'blur(40px)', opacity: 0 }}
+            animate={{ scale: 1, filter: 'blur(0px)', opacity: 1 }}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.22, 1, 0.36, 1],
+              opacity: { duration: 0.5 }
+            }}
+            className="relative z-10"
+          >
+            {/* Control Buttons */}
+            <ControlButtons 
+              theme={theme} 
+              lang={lang} 
+              onThemeChange={toggleTheme} 
+              onLangChange={toggleLang} 
+            />
+            
+            {/* Background Grid & Ambient Light */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+              <div className={`absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] ${theme === 'light' ? 'opacity-30' : ''}`}></div>
+              <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
+              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2"></div>
+            </div>
+
+            {/* Floating Navbar */}
+            <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+              <div className="flex items-center gap-1 bg-white/5 backdrop-blur-xl border border-white/10 px-2 py-2 rounded-full shadow-2xl shadow-black/50">
+                {['home', 'work', 'about', 'contact'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollTo(item)}
+                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      activeSection === item 
+                        ? theme === 'light'
                     ? 'bg-zinc-900 text-white shadow-lg scale-105'
                     : 'bg-white text-black shadow-lg scale-105'
                   : theme === 'light'
@@ -222,24 +430,23 @@ const App = () => {
             <span className={`font-mono text-sm tracking-widest uppercase ${theme === 'light' ? 'text-zinc-600' : 'text-zinc-400'}`}>{t.available}</span>
           </div>
 
-          <h1 className={`text-6xl md:text-6xl font-bold tracking-tighter mb-8 leading-[0.9] bg-clip-text text-transparent ${
+          <h1 className={`text-5xl md:text-6xl font-bold tracking-tighter mb-8 leading-[0.9] bg-clip-text text-transparent ${
             theme === 'light'
               ? 'bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-700'
               : 'bg-gradient-to-b from-white via-white to-zinc-600'
           }`}>
-            I'm Elias Araújo<br />
-            FULLSTACK<br />
+            {t.heroIntro}<br />
             <span className={`transition-colors duration-700 cursor-default ${
               theme === 'light'
                 ? 'text-zinc-900 hover:text-zinc-700'
                 : 'text-zinc-800 hover:text-white'
-            }`}>DEVELOPER</span>
+            }`}>Developer</span>
           </h1>
 
           <p className={`text-xl md:text-2xl max-w-2xl leading-relaxed mb-12 ${
             theme === 'light' ? 'text-zinc-700' : 'text-zinc-400'
           }`}>
-            I'm a fullstack developer & systems analyst
+            {t.heroSubtitle}
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -268,7 +475,7 @@ const App = () => {
           ? 'border-zinc-200 bg-white/50'
           : 'border-white/5 bg-black/50'
       }`}>
-        <InfiniteMarquee items={["React", "TypeScript", "Node.js", "Next.js", "PostgreSQL", "AWS", "Docker", "GraphQL", "Tailwind"]} />
+        <InfiniteMarquee items={["React", "TypeScript", "Node.js", "Next.js", "Tailwindcss", "Java", "Springboot", "Kubernetes", "Docker", "PostgreSQL", "MongoDB", "AWS"]} />
       </div>
 
       {/* Work Section - Bento Grid Style */}
@@ -338,11 +545,11 @@ const App = () => {
                 theme === 'light' ? 'border-zinc-200' : 'border-white/5'
               }`}>
                 <div>
-                  <div className="text-2xl font-black tracking-tighter">05+</div>
+                  <div className="text-2xl font-black tracking-tighter">03+</div>
                   <div className={`text-[9px] uppercase font-bold leading-tight ${theme === 'light' ? 'text-zinc-400' : 'opacity-40'}`}>{t.years}</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-black tracking-tighter">30+</div>
+                  <div className="text-2xl font-black tracking-tighter">15+</div>
                   <div className={`text-[9px] uppercase font-bold leading-tight ${theme === 'light' ? 'text-zinc-400' : 'opacity-40'}`}>{t.projects}</div>
                 </div>
                 <div>
@@ -405,13 +612,12 @@ const App = () => {
                   <div className="absolute left-[-5px] top-0 w-2.5 h-2.5 rounded-full bg-zinc-800 border border-white/20 group-hover:bg-purple-500 transition-colors" />
                   
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                    <h5 className="text-2xl font-black tracking-tight">Fullstack Developer</h5>
-                    <span className="font-mono text-xs text-purple-500 font-bold">2022 - Present</span>
+                    <h5 className="text-2xl font-black tracking-tight">{t.exp1Title}</h5>
+                    <span className="font-mono text-xs text-purple-500 font-bold">2022 - {t.present}</span>
                   </div>
-                  <p className="text-purple-400 font-bold text-sm mb-4 uppercase tracking-widest">Freelance & Projects</p>
+                  <p className="text-purple-400 font-bold text-sm mb-4 uppercase tracking-widest">{t.freelanceProjects}</p>
                   <p className="opacity-50 leading-relaxed max-w-2xl">
-                    Developing full-stack applications using React, Node.js, and modern cloud technologies. 
-                    Building scalable architectures and delivering high-performance solutions for clients.
+                    {t.exp1Desc}
                   </p>
                 </div>
 
@@ -419,13 +625,12 @@ const App = () => {
                   <div className="absolute left-[-5px] top-0 w-2.5 h-2.5 rounded-full bg-zinc-800 border border-white/20 group-hover:bg-purple-500 transition-colors" />
                   
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                    <h5 className="text-2xl font-black tracking-tight">Systems Analyst</h5>
+                    <h5 className="text-2xl font-black tracking-tight">{t.exp2Title}</h5>
                     <span className="font-mono text-xs text-purple-500 font-bold">2020 - 2022</span>
                   </div>
-                  <p className="text-purple-400 font-bold text-sm mb-4 uppercase tracking-widest">Tech Company</p>
+                  <p className="text-purple-400 font-bold text-sm mb-4 uppercase tracking-widest">{t.techCompany}</p>
                   <p className="opacity-50 leading-relaxed max-w-2xl">
-                    Analyzed system requirements, designed solutions, and collaborated with cross-functional teams 
-                    to deliver robust software systems. Focused on optimizing performance and user experience.
+                    {t.exp2Desc}
                   </p>
                 </div>
 
@@ -433,13 +638,12 @@ const App = () => {
                   <div className="absolute left-[-5px] top-0 w-2.5 h-2.5 rounded-full bg-zinc-800 border border-white/20 group-hover:bg-purple-500 transition-colors" />
                   
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                    <h5 className="text-2xl font-black tracking-tight">Junior Developer</h5>
+                    <h5 className="text-2xl font-black tracking-tight">{t.exp3Title}</h5>
                     <span className="font-mono text-xs text-purple-500 font-bold">2019 - 2020</span>
                   </div>
-                  <p className="text-purple-400 font-bold text-sm mb-4 uppercase tracking-widest">Startup</p>
+                  <p className="text-purple-400 font-bold text-sm mb-4 uppercase tracking-widest">{t.startup}</p>
                   <p className="opacity-50 leading-relaxed max-w-2xl">
-                    Started my journey in web development, learning modern frameworks and best practices. 
-                    Contributed to various projects and gained experience in both frontend and backend development.
+                    {t.exp3Desc}
                   </p>
                 </div>
               </div>
@@ -497,6 +701,9 @@ const App = () => {
       }`}>
         <p>© {new Date().getFullYear()} {t.footer}</p>
       </footer>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -6,7 +6,7 @@ export const translations = {
     selectedProjects: "Projetos Selecionados",
     projectsDescription: "Uma coleção de experimentos, produtos e soluções de engenharia.",
     viewAllGitHub: "Ver todos no GitHub",
-    fullstackDeveloper: "Fullstack Developer",
+    fullstackDeveloper: "Desenvolvedor Fullstack",
     biography: "Biografia",
     experience: "Experiência",
     years: "Anos",
@@ -16,8 +16,20 @@ export const translations = {
     boldIdea: "Tem uma ideia ousada?",
     contactDescription: "Estou sempre em busca de desafios que forcem os limites do que é possível na web.",
     sayHello: "Diga Olá!",
-    footer: "Design & Code by Elias Araújo.",
-    bio: "Sou um desenvolvedor fullstack e analista de sistemas apaixonado por construir soluções escaláveis e elegantes. Combino rigor técnico no desenvolvimento backend com uma obsessão pelos detalhes visuais no frontend. Acredito que o desempenho é a #1 característica de qualquer aplicação moderna. Não apenas escrevo código; construo experiências."
+    footer: "Design & Code by Elias Araújo. Todos os direitos reservados.",
+    bio: "Sou um desenvolvedor fullstack e analista de sistemas apaixonado por construir soluções escaláveis e elegantes. Combino rigor técnico no desenvolvimento backend com uma obsessão pelos detalhes visuais no frontend. Acredito que o desempenho é a #1 característica de qualquer aplicação moderna. Não apenas escrevo código; construo experiências.",
+    heroIntro: "Elias Araújo",
+    heroSubtitle: "Sou um desenvolvedor fullstack & analista de sistemas",
+    present: "Presente",
+    freelanceProjects: "Freelance & Projetos",
+    techCompany: "Empresa de Tecnologia",
+    startup: "Startup",
+    exp1Title: "Desenvolvedor Fullstack",
+    exp1Desc: "Desenvolvendo aplicações full-stack usando React, Node.js e tecnologias modernas de nuvem. Construindo arquiteturas escaláveis e entregando soluções de alta performance para clientes.",
+    exp2Title: "Analista de Sistemas",
+    exp2Desc: "Analisei requisitos de sistemas, projetei soluções e colaborei com equipes multifuncionais para entregar sistemas de software robustos. Foco em otimização de performance e experiência do usuário.",
+    exp3Title: "Desenvolvedor Júnior",
+    exp3Desc: "Iniciei minha jornada no desenvolvimento web, aprendendo frameworks modernos e melhores práticas. Contribuí para vários projetos e ganhei experiência em desenvolvimento frontend e backend."
   },
   en: {
     available: "Available for projects",
@@ -37,7 +49,19 @@ export const translations = {
     contactDescription: "I'm always looking for challenges that push the limits of what's possible on the web.",
     sayHello: "Say Hello!",
     footer: "Design & Code by Elias Araújo. All rights reserved.",
-    bio: "I'm a fullstack developer & systems analyst passionate about building scalable and elegant solutions. I combine technical rigor in backend development with an obsession for visual details in frontend. I believe performance is the #1 feature of any modern application. I don't just write code; I build experiences"
+    bio: "I'm a fullstack developer & systems analyst passionate about building scalable and elegant solutions. I combine technical rigor in backend development with an obsession for visual details in frontend. I believe performance is the #1 feature of any modern application. I don't just write code; I build experiences.",
+    heroIntro: "Elias Araújo",
+    heroSubtitle: "I'm a fullstack developer & systems analyst",
+    present: "Present",
+    freelanceProjects: "Freelance & Projects",
+    techCompany: "Tech Company",
+    startup: "Startup",
+    exp1Title: "Fullstack Developer",
+    exp1Desc: "Developing full-stack applications using React, Node.js, and modern cloud technologies. Building scalable architectures and delivering high-performance solutions for clients.",
+    exp2Title: "Systems Analyst",
+    exp2Desc: "Analyzed system requirements, designed solutions, and collaborated with cross-functional teams to deliver robust software systems. Focused on optimizing performance and user experience.",
+    exp3Title: "Junior Developer",
+    exp3Desc: "Started my journey in web development, learning modern frameworks and best practices. Contributed to various projects and gained experience in both frontend and backend development."
   }
 };
 
