@@ -400,7 +400,7 @@ const App = () => {
         <div className={`py-10 border-y backdrop-blur-sm z-20 relative ${
           theme === 'light' ? 'border-zinc-200 bg-white/50' : 'border-white/5 bg-black/50'
         }`}>
-          <InfiniteMarquee items={TECHNOLOGIES} />
+          <InfiniteMarquee items={TECHNOLOGIES} theme={theme} />
         </div>
 
         <WorkSection theme={theme} t={t} projects={projects} />
