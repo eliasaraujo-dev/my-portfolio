@@ -29,7 +29,17 @@ export const translations = {
     exp2Title: "Analista de Sistemas",
     exp2Desc: "Analisei requisitos de sistemas, projetei soluções e colaborei com equipes multifuncionais para entregar sistemas de software robustos. Foco em otimização de performance e experiência do usuário.",
     exp3Title: "Desenvolvedor Júnior",
-    exp3Desc: "Iniciei minha jornada no desenvolvimento web, aprendendo frameworks modernos e melhores práticas. Contribuí para vários projetos e ganhei experiência em desenvolvimento frontend e backend."
+    exp3Desc: "Iniciei minha jornada no desenvolvimento web, aprendendo frameworks modernos e melhores práticas. Contribuí para vários projetos e ganhei experiência em desenvolvimento frontend e backend.",
+    // Projetos
+    project1Title: "Neon Finance",
+    project1Category: "Dashboard Fintech",
+    project1Desc: "Visualização de dados cripto em tempo real com WebSockets.",
+    project2Title: "Aura Commerce",
+    project2Category: "E-commerce Headless",
+    project2Desc: "Experiência de compra ultrarrápida com Edge Functions.",
+    project3Title: "Zenith AI",
+    project3Category: "Plataforma SaaS",
+    project3Desc: "Interface generativa para criação de conteúdo automatizado."
   },
   en: {
     available: "Available for projects",
@@ -61,7 +71,17 @@ export const translations = {
     exp2Title: "Systems Analyst",
     exp2Desc: "Analyzed system requirements, designed solutions, and collaborated with cross-functional teams to deliver robust software systems. Focused on optimizing performance and user experience.",
     exp3Title: "Junior Developer",
-    exp3Desc: "Started my journey in web development, learning modern frameworks and best practices. Contributed to various projects and gained experience in both frontend and backend development."
+    exp3Desc: "Started my journey in web development, learning modern frameworks and best practices. Contributed to various projects and gained experience in both frontend and backend development.",
+    // Projects
+    project1Title: "Neon Finance",
+    project1Category: "Fintech Dashboard",
+    project1Desc: "Real-time crypto data visualization with WebSockets.",
+    project2Title: "Aura Commerce",
+    project2Category: "Headless E-commerce",
+    project2Desc: "Ultra-fast shopping experience with Edge Functions.",
+    project3Title: "Zenith AI",
+    project3Category: "SaaS Platform",
+    project3Desc: "Generative interface for automated content creation."
   }
 };
 
